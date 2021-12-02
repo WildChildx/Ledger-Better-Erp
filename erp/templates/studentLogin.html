@@ -1,0 +1,99 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+    Student Login
+  </title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<style>
+  div {
+    border-style: rounded;
+    border-color: coral;
+    border-width: 7px;
+  }
+</style>
+
+<body style="background-color :  #010931"> -->
+{% extends "base.html" %} {% block content %}
+{% load static %}
+<!-- <div class="container-fluid">
+  <h4 style="color : white">ERP Management</h4>
+  <br> <br> <br> <br> <br> <br>
+  <div class="col-md-12">
+    <div class="col-md-3">
+    </div>
+    <div class="col-md-4" style="background-color :#011059;  padding-bottom : 15px; padding-top : 15px">
+      <h4 style="color : white"><b>Login</b></h4>
+
+      <form action="studentLogin" method="POST">
+        {% csrf_token %}
+        <div class="col-md-12">
+          <div class="col-md-8 ">
+            <div class="form-group">
+              <label style="color:white">Roll No</label>
+              <input type="text" name="username" placeholder="Username" class="form-control" required id="id_username">
+              <p style="color : Red">{{invalid_username}}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-12">
+          <div class="col-md-8 ">
+            <div class="form-group">
+              <label style="color:white">Password</label>
+              <input type="password" name="password" placeholder="Password" class="form-control" required
+                id="id_password">
+              <p style="color : Red">{{invalid_password}}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-12">
+          <div class="card-footer">
+            <br><button type="submit" name="login" class="btn btn-default"
+              style="padding-left : 25px; padding-right : 25px">Login</button>
+            &nbsp; &nbsp;
+            Don't have an account? <a href="createStudent" class="">Create</a>
+          </div>
+        </div>
+
+        <div class="col-md-12">
+          <div class="card-footer">
+            <br>
+            <a href="createStudent" class="">Forgot Password</a>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div> -->
+
+<form>
+  <div class="mb-3">
+    <label for="exampleInputEmail1" class="form-label">Email address</label>
+    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+    <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+  </div>
+  <div class="mb-3">
+    <label for="exampleInputPassword1" class="form-label">Password</label>
+    <input type="password" class="form-control" id="exampleInputPassword1">
+  </div>
+  <div class="mb-3 form-check">
+    <input type="checkbox" class="form-check-input" id="exampleCheck1">
+    <label class="form-check-label" for="exampleCheck1">Check me out</label>
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+{% endblock content %}
+
+<!-- </body>
+
+</html> -->
