@@ -128,49 +128,50 @@ def createStudent(request):
     return render(request, 'createStudent.html')
 
 
-def teacher(request):
+def teacherLogin(request):
     print('here')
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-
         mycursor = mydb.cursor()
         sql = "select name,password from teacher where name = %s"
         mycursor.execute(sql, (username,))
-
         try:
             user = mycursor.fetchall()[0]
-            print(user)
+            # print(user)
             mycursor.close()
             if(password == user[1]):
                 global loged_in_user_roll, loged_in_user_name
                 loged_in_user_roll = id
                 loged_in_user_name = user[0]
-                print(user[1], '', password)
-                return redirect('/teacher-dashboard')
+                return redirect('/teacherDash')
             return render(request, 'teacher.html', {'invalid_password': 'Invalid password'})
         except IndexError:
             return render(request, 'teacher.html', {'invalid_username': 'Invalid Username'})
-
-        # print('There')
-        # return render(request, 'login.html',{'error' : 'Invalid Credentials'})
     return render(request, 'teacher.html')
 
 
-def teacher_dashboard(request):
-    return render(request, 'teacher_dashboard.html')
+def teacherDash(request):
+    mycursor = mydb.cursor()
+    sql = "select * from students where is_admitted = %s"
+    status = 1
+    mycursor.execute(sql, (status,))
+    # print(mycursor)
+    admitted_students = [{'roll': x[0], 'name':x[1], 'contact': x[2],
+                          'mail': x[3], 'dept': x[4], 'year': x[5]} for x in mycursor.fetchall()]
+    # print(admitted_students)
+    mycursor.close()
+    return render(request, 'teacher_dashboard.html', {'students': admitted_students})
 
 
-def admin(request):
+def adminLogin(request):
     print('here')
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-
         mycursor = mydb.cursor()
-        sql = "select username,password from admin where username = %s"
-        mycursor.execute(sql, (username,))
-
+        mycursor.execute(
+            "select username,password from admin where username = %s", (username,))
         try:
             user = mycursor.fetchall()[0]
             print(user)
@@ -180,24 +181,43 @@ def admin(request):
                 loged_in_user_roll = id
                 loged_in_user_name = user[0]
                 print(user[1], '', password)
-                return redirect('/admin-dashboard')
+                return redirect('/adminDash')
             return render(request, 'admin.html', {'invalid_password': 'Invalid password'})
         except IndexError:
             return render(request, 'admin.html', {'invalid_username': 'Invalid Username'})
-
     return render(request, 'admin.html')
 
 
-def admin_dashboard(request):
+def adminDash(request):
     mycursor = mydb.cursor()
-    sql = "select roll_no AS roll,name AS name from students where is_admitted = %s"
-    status = '0'
+    sql = "select * from students where is_admitted = %s"
+    status = 0
     mycursor.execute(sql, (status,))
-    print(mycursor)
-    students = [{'roll': x[0], 'name':x[1]} for x in mycursor.fetchall()]
-    print(students)
-    # mycursor.close()
-    return render(request, 'admin_dashboard.html', {'students': students})
+    # print(mycursor)
+    students = [{'roll': x[0], 'name':x[1], 'contact': x[2], 'mail': x[3],
+                 'dept': x[4], 'year': x[5]} for x in mycursor.fetchall()]
+    # print(students)
+    mycursor.close()
+    mycursor = mydb.cursor()
+    sql = "select * from students where is_admitted = %s"
+    status = 1
+    mycursor.execute(sql, (status,))
+    # print(mycursor)
+    admitted_students = [{'roll': x[0], 'name':x[1], 'contact': x[2],
+                          'mail': x[3], 'dept': x[4], 'year': x[5]} for x in mycursor.fetchall()]
+    # print(admitted_students)
+    mycursor.close()
+    mycursor = mydb.cursor()
+    mycursor.execute('select name from teacher')
+    teachers = [{'name': x[0]} for x in mycursor.fetchall()]
+    # print(teachers)
+    mycursor.close()
+    mycursor = mydb.cursor()
+    mycursor.execute('select username from admin')
+    admins = [{'name': x[0]} for x in mycursor.fetchall()]
+    # print(teachers)
+    mycursor.close()
+    return render(request, 'admin_dashboard.html', {'students': students, 'admitted_students': admitted_students, 'teachers': teachers, 'admins': admins})
 
 
 def acceptUser(request):
@@ -222,3 +242,93 @@ def rejectUser(request):
         mydb.commit()
         return HttpResponse("Student Rejected")
     return HttpResponse("User Rejection Failed")
+
+
+def add_teacher(request):
+    #print("In Add teacher")
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        mycursor = mydb.cursor()
+        sql = 'select name from teacher where name = %s'
+        mycursor.execute(sql, (username,))
+        try:
+            user = mycursor.fetchall()[0]
+            # print(user)
+            mycursor.close()
+            if(username in user):
+                return render(request, 'add_teacher.html', {'invalid_username': 'teacher all ready exist'})
+        except IndexError:
+            sql = 'insert into teacher(name,password) values(%s,%s)'
+            val = (username, password)
+            mycursor.execute(sql, val)
+            mydb.commit()
+            #print("teacher added")
+            return redirect("/adminDash")
+    return render(request, 'add_teacher.html')
+
+
+def add_admin(request):
+    print("In Add admin")
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        mycursor = mydb.cursor()
+        sql = 'select username from admin where username = %s'
+        mycursor.execute(sql, (username,))
+        try:
+            user = mycursor.fetchall()[0]
+            print(user)
+            mycursor.close()
+            if(username in user):
+                return render(request, 'add_teacher.html', {'invalid_username': 'teacher all ready exist'})
+        except IndexError:
+            sql = 'insert into admin(username,password) values(%s,%s)'
+            val = (username, password)
+            mycursor.execute(sql, val)
+            mydb.commit()
+            print("admin added")
+            return redirect("/adminDash")
+    return render(request, 'add_admin.html')
+
+
+def remove_teacher(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        #method = request.POST.get('action')
+        mycursor = mydb.cursor()
+        query = "delete from teacher where name = %s"
+        mycursor.execute(query, (name,))
+        mydb.commit()
+        return redirect('/adminDash')
+    return HttpResponse("Teacher Deletion Failed Failed")
+
+
+def delete_admin(request):
+    if request.method == 'POST':
+        name = request.POST.get('username')
+        #method = request.POST.get('action')
+        mycursor = mydb.cursor()
+        mycursor.execute('select username from admin')
+        admin = mycursor.fetchall()
+        # print(admin)
+        if (len(admin) == 1):
+            return redirect('/adminDash')
+        query = "delete from admin where username = %s"
+        mycursor.execute(query, (name,))
+        mydb.commit()
+        return redirect('/adminDash')
+    return HttpResponse("Teacher Deletion Failed Failed")
+
+
+def createEvent(request):
+    if request.method == 'POST':
+        desc = request.POST.get('desc')
+        link = request.POST.get('link')
+        mycursor = mydb.cursor()
+        sql = 'insert into events(description,link) values(%s,%s)'
+        val = (desc, link)
+        mycursor.execute(sql, val)
+        mydb.commit()
+        return HttpResponse("Event created")
+    return HttpResponse("Failed to create event")

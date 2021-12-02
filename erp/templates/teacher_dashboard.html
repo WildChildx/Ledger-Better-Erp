@@ -1,1 +1,62 @@
-hi Welcome to teacher Dashboard
+{% extends "base.html" %} {% block content %}
+{% load static %}
+
+<div class="container">
+    <h2>Students</h2>
+    <hr>
+    <div class="containter">
+        <div class="col-md-12">
+            <table class="table">
+                <thead>
+                    <th>Roll no</th>
+                    <th>Name</th>
+                    <th>Contact</th>
+                    <th>Mail id</th>
+                    <th>Department</th>
+                    <th>Year</th>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                    <tr>
+                        <td>{{ student.roll }}</td>
+                        <td>{{ student.name }}</td>
+                        <td>{{ student.contact }}</td>
+                        <td>{{ student.mail }}</td>
+                        <td>{{ student.dept }}</td>
+                        <td>{{ student.year }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+<br>
+<br>
+
+<h2>Add Events</h2>
+<br>
+<div class="container">
+    <div class="col-md-12">
+        <form action="createEvent" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label> Description</label>
+                <input type="text" name="desc" class="form-control">
+            </div>
+            <br>
+            <div class="form-group">
+                <label> Link </label>
+                <input type="text" name="link" class="form-control">
+            </div>
+            <br>
+            <button type="submit" name="add" class="btn btn-primary"
+                style="padding-left : 15px; padding-right : 15px">Create</button>
+        </form>
+    </div>
+    <br>
+
+</div>
+
+{% endblock content %}

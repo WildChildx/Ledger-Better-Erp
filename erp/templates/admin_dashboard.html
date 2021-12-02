@@ -1,102 +1,157 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-    <title>
-        Admin Dashboard
-    </title>
-    <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1">
-            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    </head>
-    <style>
-        table, th, td {
-        border: 1px solid black;
-        border-collapse: collapse;
-        padding : 5px;
-        }
-    </style>
-    <body >
-         <div class = "container-fluid" >
-            <div class = "col-md-12">
-                <nav class="navbar navbar-inverse">
-                    <div class="container-fluid">
-                        <div class="navbar-header">
-                            <a class="navbar-brand" href="#">Erp Management</a>
-                        </div>
-                        <ul class="nav navbar-nav">
-                            <li><a href="#">Home</a></li>
-                            <li class="dropdown">
-                                <a class="dropdown-toggle" data-toggle="dropdown">Sign In
-                                <span class="caret"></span></a>
-                                <ul class="dropdown-menu" style = "background-color : #222222">
-                                <li><a href="login">Student</a></li>
-                                <li><a href="teacher">Teacher</a></li>
-                                <li><a href="admin">Admin</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="register">Register</a></li>
-                            <li><a href="#">About Us</a></li>
-                            <li><a href="#">Contact Us</a></li>
-                        </ul>
-                    </div>
-                </nav>
-            </div> <!--Menua div closed-->
-            <div class = "col-md-12">
-                 <div class = "col-md-2" style = "padding-top: 5px;padding-bottom: 5px; border-right-style : solid">
-                <div class="sidebar" >
-                    <div class="sidebar-wrapper" >
-                        <div class="logo">
-                            <center><b><h2 style = "color:black">Navigation</h2></b></center>
-                        </div><hr style = "background-color:red ;margin-left:10px;margin-right:10px;">
-                        <h3><li class="{% if 'index' in segment %} active {% endif %}"><a href="#">Add Teacher</a></li><br>
-                        <li class="{% if 'page-user' in segment %} active {% endif %}"><a href="#">Add Admin</a></li><br>
-                    </div>
-                </div>
-            </div><!-- sidebar div clodes-->
-            <div class = "col-md-10">
-                <table style = " border: 1px solid black; border-collapse: collapse;">
+{% extends "base.html" %} {% block content %}
+{% load static %}
+<br>
+<br>
+<h2>Pending Admissions</h2>
+<hr>
+<div class="container">
+    <table class="table">
+        <thead class="thead-dark">
+            <th>Roll no</th>
+            <th>Name</th>
+            <th>Contact</th>
+            <th>Mail id</th>
+            <th>Department</th>
+            <th>Year</th>
+            <th>Accept</th>
+            <th>Reject</th>
+        </thead>
+        <tbody>
+            {% for student in students %}
+            <tr>
+                <td>{{ student.roll }}</td>
+                <td>{{ student.name }}</td>
+                <td>{{ student.contact }}</td>
+                <td>{{ student.mail }}</td>
+                <td>{{ student.dept }}</td>
+                <td>{{ student.year }}</td>
+                <td>
+                    <form action="acceptUser" method='post'>
+                        {% csrf_token %}
+                        <input type="hidden" name="roll" value={{ student.roll }} />
+                        <input type="hidden" name="action" value="UPDATE" />
+                        <button type="submit" name="add" class="btn btn-success"
+                            style="padding-left : 15px; padding-right : 15px">Accept</button>
+                    </form>
+                </td>
+                <td>
+                    <form action="rejectUser" method='post'>
+                        {% csrf_token %}
+                        <input type="hidden" name="roll" value={{ student.roll }} />
+                        <input type="hidden" name="action" value="DELETE" />
+                        <button type="submit" name="add" class="btn btn-danger"
+                            style="padding-left : 15px; padding-right : 15px">Reject</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+
+    </table>
+</div>
+</div>
+<br>
+<br>
+<!-- accepted students table -->
+<div class="container">
+    <h2>Accepted Students</h2>
+    <hr>
+    <div class="containter">
+        <div class="col-md-12">
+            <table class="table">
+                <thead>
+                    <th>Roll no</th>
+                    <th>Name</th>
+                    <th>Contact</th>
+                    <th>Mail id</th>
+                    <th>Department</th>
+                    <th>Year</th>
+                    <th>Remove</th>
+                </thead>
+                <tbody>
+                    {% for student in admitted_students %}
                     <tr>
-                        <th>Roll no</th>
-                        <th>Name</th>
-                        <th>Contact</th>
-                        <th>Mail id</th>
-                        <th>Department</th>
-                        <th>Year</th>
-                        <th>Accept</th>
-                        <th>Reject</th>
-                    </tr>
-                    {% for student in students %}
-                        <tr>
-                            <th>{{ student.roll }}</th>
-                            <th>{{ student.name }}</th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                            <th>
-                                <form action = "acceptUser" method='post'>
+                        <td>{{ student.roll }}</td>
+                        <td>{{ student.name }}</td>
+                        <td>{{ student.contact }}</td>
+                        <td>{{ student.mail }}</td>
+                        <td>{{ student.dept }}</td>
+                        <td>{{ student.year }}</td>
+                        <td>
+                            <form action="rejectUser" method='post'>
                                 {% csrf_token %}
                                 <input type="hidden" name="roll" value={{ student.roll }} />
-                                <input type="hidden" name="action" value="UPDATE" />
-                                <button type="submit" name="add" class="btn btn-default" style = "padding-left : 15px; padding-right : 15px">Accept</button>
-                                </form>
-                            </th>
-                            <th> 
-                                <form action = "rejectUser" method='post'>
-                                {% csrf_token %}
-                                <input type="hidden" name="roll" value={{ student.roll }} /> 
-                                <input type="hidden" name="action" value="DELETE" /> 
-                                <button type="submit" name="add" class="btn btn-default" style = "padding-left : 15px; padding-right : 15px">Reject</button>
-                                </form>
-                            </th>
-                        </tr>
+                                <input type="hidden" name="action" value="DELETE" />
+                                <button type="submit" name="add" class="btn btn-danger"
+                                    style="padding-left : 15px; padding-right : 15px">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
                     {% endfor %}
-                    
-                </table>
-            </div> <!--Student data div closes-->
-            </div> <!--containt Div Closed-->
-        </div> <!--main div closed-->
-    </body>
-</head>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+<br>
+<br>
+<!-- added staff table -->
+<div class="container">
+    <h2>Added Staff </h2>
+    <h6><a href="add-teacher"><button class="btn btn-primary mr-5">Add teacher</button></a> <a href="add-admin"><button
+                class="btn btn-primary">Add
+                Admin</button></a></h6>
+    <hr>
+    <div class="row">
+        <div class="col-md-4">
+            <table class="table">
+                <thead class="thead-dark">
+                    <th>Teacher</th>
+                    <th>Remove</th>
+                </thead>
+                <tbody>
+                    {% for teacher in teachers %}
+                    <tr>
+                        <td>{{teacher.name}}</td>
+                        <td>
+                            <form action="removeTeacher" method='post'>
+                                {% csrf_token %}
+                                <input type="hidden" name="name" value={{ teacher.name }} />
+                                <input type="hidden" name="action" value="DELETE" />
+                                <button type="submit" name="add" class="btn btn-danger"
+                                    style="padding-left : 15px; padding-right : 15px">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-4">
+            <table class="table">
+                <thead>
+                    <th>Admin</th>
+                    <th>Remove</th>
+                </thead>
+                <tbody>
+                    {% for admin in admins %}
+                    <tr>
+                        <td>{{admin.name}}</td>
+                        <td>
+                            <form action="deleteAdmin" method='post'>
+                                {% csrf_token %}
+                                <input type="hidden" name="username" value={{ admin.name }} />
+                                <input type="hidden" name="action" value="DELETE" />
+                                <button type="submit" name="add" class="btn btn-danger"
+                                    style="padding-left : 15px; padding-right : 15px">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock content %}

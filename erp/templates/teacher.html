@@ -1,73 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-    <title>
-        Teacher
-    </title>
-    <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1">
-            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    </head>
-    <style>
-      div {
-        border-style: rounded;
-        border-color: coral;
-        border-width: 7px;
-      }
-    </style>
-    <body style = "background-color :  #010931">
-        <div class = "container-fluid" >
-          <h4 style = "color : white">ERP Management</h4>
-          <br> <br> <br> <br> <br>  <br>
-          <div class = "col-md-12" >
-            <div class ="col-md-3">
-            </div>
-            <div class = "col-md-4" style = "background-color :#011059;  padding-bottom : 15px; padding-top : 15px">
-            <h4 style = "color : white"><b>Login</b></h4>
-            
-              <form action="teacher" method = "POST">
-                     {% csrf_token %} 
-                  <div class = "col-md-12">
-                    <div class="col-md-8 ">
-                      <div class="form-group">                        
-                        <label style = "color:white">Username</label>
-                        <input type="text" name="username" placeholder="Username" class="form-control" required id="id_username">
-                        <p style = "color : Red">{{invalid_username}}</p>
-                      </div>
-                    </div>
-                  </div>
-
-                    <div class = "col-md-12">
-                      <div class="col-md-8 ">
-                        <div class="form-group">
-                            <label style = "color:white">Password</label>
-                            <input type="password" name="password" placeholder="Password" class="form-control" required id="id_password">
-                            <p style = "color : Red">{{invalid_password}}</p>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div class = "col-md-12">
-                     <div class="card-footer">
-                        <br><button type="submit" name="login" class="btn btn-default" style = "padding-left : 25px; padding-right : 25px">Login</button>
-                        &nbsp; &nbsp;
-                        <!--Don't have an account? <a href="register" class="">Create</a>-->
-                      </div>
-                    </div>
-
-                    <!--<div class = "col-md-12">
-                     <div class="card-footer">
-                        <br>
-                        <a href="register" class="">Forgot Password</a>
-                      </div>
-                    </div>-->
-                    
-              </form>
-            </div>
-          </div>
+{% extends "base.html" %} {% block content %}
+{% load static %}
+<br><br><br>
+<div class="container">
+  <div class="row">
+    <div class="col-md-5 mx-auto">
+      <form method="post" action="/teacherLogin">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="exampleInputEmail1">Username</label>
+          <input type="text" class="form-control" name="username" id="exampleInputEmail1" aria-describedby="emailHelp"
+            placeholder="Username">
+          <p style="color : Red">{{invalid_username}}</p>
         </div>
-
-    </body>
-</html>
+        <div class="form-group">
+          <label for="exampleInputPassword1">Password</label>
+          <input type="password" class="form-control" id="exampleInputPassword1" name="password" placeholder="Password">
+          <p style="color : Red">{{invalid_password}}</p>
+        </div>
+        <button type="submit" class="btn btn-primary">Login</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock content %}
