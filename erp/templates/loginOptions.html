@@ -1,45 +1,58 @@
-{% extends "base.html" %} {% block content %}
-{% load static %}
+{% extends "base.html" %} {% block content %} {% load static %}
 <div class="container">
-    <div class="container m-4">
-        <center>
-            <h2>Who are you ?</h2>
-        </center>
-
+  <div class="container m-4">
+    <center>
+      <h2>Who are you ?</h2>
+    </center>
+  </div>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card" style="width: 18rem">
+        <img
+          src="{% static 'images/teacher.png' %}"
+          class="card-img-top"
+          alt="..."
+        />
+        <div class="card-body">
+          <h5 class="card-title">Teacher</h5>
+          <p class="card-text">
+            Hurry up students are waiting to join your class.
+          </p>
+          <a href="/teacherLogin" class="btn btn-primary">Login</a>
+        </div>
+      </div>
     </div>
-    <div class="row">
-        <div class="col-md-4 ">
-            <div class="card " style=" width: 18rem;">
-                <img src="{% static 'images/teacher.png' %}" class="card-img-top " alt="...">
-                <div class="card-body">
-                    <h5 class="card-title">Teacher</h5>
-                    <p class="card-text">Hurry up students are waiting </p>
-                    <a href="/studentLogin" class="btn btn-primary">Login</a>
-                </div>
-            </div>
+    <div class="col-md-4">
+      <div class="card" style="width: 18rem">
+        <img
+          src="{% static 'images/student.jpg' %}"
+          class="card-img-top"
+          alt="..."
+        />
+        <div class="card-body">
+          <h5 class="card-title">Students</h5>
+          <p class="card-text">You are already late for the class!</p>
+          <a href="/studentLogin" class="btn btn-primary">Login</a>
         </div>
-        <div class="col-md-4 ">
-            <div class="card " style=" width: 18rem;">
-                <img src="{% static 'images/student.jpg' %}" class="card-img-top " alt="...">
-                <div class="card-body">
-                    <h5 class="card-title">Students</h5>
-                    <p class="card-text">You are already late !</p>
-                    <a href="/studentLogin" class="btn btn-primary">Login</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 ">
-            <div class="card " style=" width: 18rem;">
-                <img src="{% static 'images/admin.jpg' %}" class="card-img-top " alt="...">
-                <div class="card-body">
-                    <h5 class="card-title">Admin</h5>
-                    <p class="card-text">You have some people to add</p>
-                    <a href="/studentLogin" class="btn btn-primary">Login</a>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
-
+    <div class="col-md-4">
+      <div class="card" style="width: 18rem">
+        <img
+          src="{% static 'images/admin.jpg' %}"
+          class="card-img-top"
+          alt="..."
+        />
+        <div class="card-body">
+          <h5 class="card-title">Admin</h5>
+          <p class="card-text">
+            You have permission to add staff and students.
+          </p>
+          <a href="/adminLogin" class="btn btn-primary">Login</a>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 {% endblock content %}

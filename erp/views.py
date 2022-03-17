@@ -7,20 +7,20 @@ from mysql.connector import errorcode
 
 
 # localdb
-# mydb = mysql.connector.connect(
-# host="localhost",
-# user="dbms",
-#  password="Dbms@1234",
-# database = 'erp'
-# )
+mydb = mysql.connector.connect(
+host="localhost",
+user="dbms",
+ password="1234",
+database = 'erp'
+)
 
 # remote db on docker yash
-mydb = mysql.connector.connect(
-    host="dbms-mini-project.duckdns.org",
-    user="dbms",
-    password="dbms",
-    database='erp'
-)
+# mydb = mysql.connector.connect(
+#     host="dbms-mini-project.duckdns.org",
+#     user="dbms",
+#     password="dbms",
+#     database='erp'
+# )
 
 loged_in_user_roll = ''
 loged_in_user_name = ''
@@ -31,10 +31,136 @@ def home(request):
     return render(request, 'loginOptions.html')
 
 
+# def createStudent(request):
+#     print("in register")
+#     if request.method == 'POST':
+#         print("in register POST")
+#         name = request.POST.get('name')
+#         roll_no = request.POST.get('roll')
+#         year = request.POST.get('year')
+#         mail = request.POST.get('mail')
+#         contact = request.POST.get('contact')
+#         password1 = request.POST.get('password1')
+#         password2 = request.POST.get('password2')
+#         print(name, '', roll_no, '', year, '', mail,
+#               '', contact, '', password1, '', password2)
+#         mycursor = mydb.cursor()
+#         sql = "select roll_no from students"
+#         mycursor.execute(sql)
+#         roll = mycursor.fetchall()[0]
+#         print(roll)
+#         mycursor.close()
+#         error = 0
+#         context = {
+#             'error1': '',
+#             'error2': '',
+#             'error3': '',
+#             'error4': '',
+#             'error5': '',
+#         }
+#         if(roll_no in roll and roll):
+#             print(roll[0], '', roll_no)
+#             context['error1'] = 'User Exists !'
+#             error = 1
+#             # return render(request, 'register.html',{'error1' : 'user allready Registerd'})
+#         if((roll_no[: 1].isdigit() == False) or (roll_no[2: 3].isalpha() == False) or (roll_no[4:].isdigit() == False)):
+#             print(roll_no)
+#             error = 1
+#             context['error1'] = 'Invalid Username'
+
+#         if ((contact.isdigit() == False) or (len(str(contact)) != 10)):
+#             context['error2'] = 'Enter Valid phone number'
+#             error = 1
+#             # return render(request, 'register.html', {'error2' : 'Enter Valid phone number'})
+
+#         if (password1 != password2):
+#             context['error3'] = 'passwords do not matched'
+#             error = 1
+#             # return render(request, 'register.html', {'error3' : 'passwords do not matched'})
+#         if(error == 1):
+#             return render(request, 'createStudent.html', context)
+#         mycursor = mydb.cursor()
+#         sql = 'insert into students(Roll_no,name,contact_no,mail_id,year,password,is_admitted) values(%s,%s,%s,%s,%s,%s,%s)'
+#         val = (roll_no, name, contact, mail, year, password1, 0)
+#         mycursor.execute(sql, val)
+#         mydb.commit()
+#         # r = requests.post("http://dbms-mini-project.duckdns.org:3000/student", json={
+#         #                   'student': {'name': name, 'roll': roll_no, 'class': 1, 'password': password1}})
+#         # print(r)
+#         return redirect('/studentLogin')
+#     return render(request, 'createStudent.html')
+
+
+def createStudent(request):
+    print("in register")
+    if request.method == 'POST':
+        #print("in register POST")
+        name = request.POST.get('name')
+        roll_no = request.POST.get('roll')
+        year = request.POST.get('year')
+        mail = request.POST.get('mail')
+        contact = request.POST.get('contact')
+        password1 = request.POST.get('password1')
+        password2 = request.POST.get('password2')
+        #print(name ,'', roll_no ,'', year,'',mail,'',contact,'',password1, '',password2 )
+
+        error = 0
+        context = {
+            'error1' : '',
+            'error2' : '',
+            'error3' : '',
+            'error4' : '',
+            'error5' : '',
+        }
+
+        try : 
+            mycursor = mydb.cursor()
+            sql = "select roll_no from students"
+            mycursor.execute(sql)
+            roll = mycursor.fetchall()[0]
+            #print(roll)
+            mycursor.close() 
+        
+            if(roll_no in roll):
+                #print(roll[0], '', roll_no)
+                context['error1'] = 'user allready Registerd' 
+                error = 1
+                #return render(request, 'erp/register.html',{'error1' : 'user allready Registerd'})
+        except IndexError :
+            pass
+        if((roll_no[ : 1].isdigit() == False) or (roll_no[2 : 3].isalpha() == False) or (roll_no[4 : ].isdigit() == False)):
+            print(roll_no)
+            error = 1
+            context['error1'] = 'Invalid Username'
+
+        if ((contact.isdigit()==False) or (len(str(contact))!=10)):
+            context['error2'] = 'Enter Valid phone number'
+            error = 1
+            #return render(request, 'erp/register.html', {'error2' : 'Enter Valid phone number'})
+        
+        if (password1 != password2):
+            context['error3'] = 'passwords do not matched'
+            error = 1
+            #return render(request, 'erp/register.html', {'error3' : 'passwords do not matched'}
+
+        if(error == 1):
+            return render(request, 'createStudent.html', context)
+
+        mycursor = mydb.cursor() 
+        sql = 'insert into students(Roll_no,name,contact_no,mail_id,year,password,is_admitted) values(%s,%s,%s,%s,%s,%s,%s)'   
+        val = (roll_no,name,contact,mail,year,password1,0)
+
+        mycursor.execute(sql, val)
+        mydb.commit()
+
+        return redirect('/studentLogin')
+    return render(request, 'createStudent.html')
+
+
 def studentLogin(request):
     print('studentLogin')
     if request.method == 'POST':
-        username = request.POST.get('username')
+        roll_no = request.POST.get('rollNumber')
         password = request.POST.get('password')
         role = request.POST.get('role')
         mycursor = mydb.cursor()
@@ -57,6 +183,7 @@ def studentLogin(request):
 
 
 def studentDash(request):
+    #code coming from yash app
     # r = requests.get(
     #     f"http://dbms-mini-project.duckdns.org:3000/student/status/{loged_in_user_roll}")
     # print(loged_in_user_roll)
@@ -67,65 +194,6 @@ def studentDash(request):
     }
     return render(request, 'studentDash.html', context)
 
-
-def createStudent(request):
-    print("in register")
-    if request.method == 'POST':
-        print("in register POST")
-        name = request.POST.get('name')
-        roll_no = request.POST.get('roll')
-        year = request.POST.get('year')
-        mail = request.POST.get('mail')
-        contact = request.POST.get('contact')
-        password1 = request.POST.get('password1')
-        password2 = request.POST.get('password2')
-        print(name, '', roll_no, '', year, '', mail,
-              '', contact, '', password1, '', password2)
-        mycursor = mydb.cursor()
-        sql = "select roll_no from students"
-        mycursor.execute(sql)
-        roll = mycursor.fetchall()[0]
-        print(roll)
-        mycursor.close()
-        error = 0
-        context = {
-            'error1': '',
-            'error2': '',
-            'error3': '',
-            'error4': '',
-            'error5': '',
-        }
-        if(roll_no in roll):
-            print(roll[0], '', roll_no)
-            context['error1'] = 'user allready Registerd'
-            error = 1
-            # return render(request, 'register.html',{'error1' : 'user allready Registerd'})
-        if((roll_no[: 1].isdigit() == False) or (roll_no[2: 3].isalpha() == False) or (roll_no[4:].isdigit() == False)):
-            print(roll_no)
-            error = 1
-            context['error1'] = 'Invalid Username'
-
-        if ((contact.isdigit() == False) or (len(str(contact)) != 10)):
-            context['error2'] = 'Enter Valid phone number'
-            error = 1
-            # return render(request, 'register.html', {'error2' : 'Enter Valid phone number'})
-
-        if (password1 != password2):
-            context['error3'] = 'passwords do not matched'
-            error = 1
-            # return render(request, 'register.html', {'error3' : 'passwords do not matched'})
-        if(error == 1):
-            return render(request, 'createStudent.html', context)
-        mycursor = mydb.cursor()
-        sql = 'insert into students(Roll_no,name,contact_no,mail_id,year,password,is_admitted) values(%s,%s,%s,%s,%s,%s,%s)'
-        val = (roll_no, name, contact, mail, year, password1, 0)
-        mycursor.execute(sql, val)
-        mydb.commit()
-        # r = requests.post("http://dbms-mini-project.duckdns.org:3000/student", json={
-        #                   'student': {'name': name, 'roll': roll_no, 'class': 1, 'password': password1}})
-        # print(r)
-        return redirect('/studentLogin')
-    return render(request, 'createStudent.html')
 
 
 def teacherLogin(request):
